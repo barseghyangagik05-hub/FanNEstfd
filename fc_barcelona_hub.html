@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FC Barcelona — Més que un club | Interactive Hub</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Oswald -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Oswald', 'sans-serif'],
+                    },
+                    colors: {
+                        blau: {
+                            500: '#004D98',
+                            600: '#003d7a',
+                            800: '#00264d',
+                            900: '#0a1128',
+                            950: '#050914',
+                        },
+                        grana: {
+                            500: '#A50044',
+                            600: '#850037',
+                            700: '#66002a',
+                        },
+                        barcagold: {
+                            400: '#f5cc33',
+                            500: '#EDBB00',
+                            600: '#c79d00',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Blaugrana Stripes & Custom Backgrounds */
+        .blaugrana-stripes {
+            background: repeating-linear-gradient(
+                90deg,
+                #004D98 0px,
+                #004D98 45px,
+                #A50044 45px,
+                #A50044 90px
+            );
+        }
+
+        .blaugrana-hero {
+            background-color: #050914;
+            background-image: 
+                radial-gradient(circle at 15% 30%, rgba(165, 0, 68, 0.45) 0%, transparent 50%),
+                radial-gradient(circle at 85% 60%, rgba(0, 77, 152, 0.55) 0%, transparent 55%),
+                radial-gradient(circle at 50% 10%, rgba(237, 187, 0, 0.15) 0%, transparent 40%);
+        }
+
+        .gold-ribbon {
+            background: linear-gradient(90deg, #004D98 0%, #A50044 35%, #EDBB00 50%, #A50044 65%, #004D98 100%);
+            background-size: 200% 100%;
+            animation: shimmerStripe 8s linear infinite;
+        }
+
+        @keyframes shimmerStripe {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* SPA Page Transitions */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Football Pitch Grass Styling */
+        .football-pitch {
+            background: repeating-linear-gradient(
+                0deg,
+                #15803d 0px,
+                #15803d 36px,
+                #166534 36px,
+                #166534 72px
+            );
+            position: relative;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.45);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050914;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #004D98;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #A50044;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-grana-500 selection:text-white">
+
+    <!-- Top Blaugrana & Gold Stripe -->
+    <div class="h-1.5 w-full gold-ribbon sticky top-0 z-50"></div>
+
+    <!-- Navigation Bar -->
+    <header class="bg-blau-950/90 backdrop-blur-md shadow-lg sticky top-1.5 z-40 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Club Crest Logo -->
+                <div class="flex items-center gap-3.5 cursor-pointer group" onclick="switchTab('home')">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blau-500 via-grana-500 to-barcagold-500 p-0.5 shadow-lg group-hover:scale-105 transition-transform">
+                        <div class="w-full h-full bg-blau-950 rounded-[14px] flex items-center justify-center">
+                            <i class="fa-solid fa-shield-halved text-2xl text-barcagold-500"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="font-display font-bold text-2xl tracking-wider text-white block leading-none">FC BARCELONA</span>
+                        <span class="text-[11px] text-barcagold-500 font-bold tracking-widest uppercase">Més que un club • Est. 1899</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                    <button onclick="switchTab('home')" data-tab="home" class="nav-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-gradient-to-r from-blau-500 to-grana-500 text-white shadow-md">
+                        <i class="fa-solid fa-house"></i> Home
+                    </button>
+                    <button onclick="switchTab('legends')" data-tab="legends" class="nav-btn px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-star text-barcagold-500"></i> Legends & Squad
+                    </button>
+                    <button onclick="switchTab('trophies')" data-tab="trophies" class="nav-btn px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-trophy text-barcagold-500"></i> Honours
+                    </button>
+                    <button onclick="switchTab('campnou')" data-tab="campnou" class="nav-btn px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-futbol"></i> Camp Nou & Clásico
+                    </button>
+                    <button onclick="switchTab('quiz')" data-tab="quiz" class="nav-btn px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2 relative">
+                        <i class="fa-solid fa-bolt text-barcagold-500"></i> Barça Quiz
+                        <span class="w-2 h-2 rounded-full bg-grana-500 animate-ping absolute top-2 right-2"></span>
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button onclick="toggleMobileMenu()" class="p-2.5 rounded-xl text-slate-200 hover:bg-white/10 focus:outline-none">
+                        <i id="mobile-menu-icon" class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-blau-900 border-b border-white/10 px-4 pt-2 pb-4 space-y-1.5 shadow-2xl">
+            <button onclick="switchTab('home')" data-tab="home" class="mobile-nav-btn w-full text-left px-4 py-3 rounded-xl text-base font-semibold flex items-center gap-3 bg-gradient-to-r from-blau-500 to-grana-500 text-white">
+                <i class="fa-solid fa-house w-5 text-center"></i> Home (Més que un club)
+            </button>
+            <button onclick="switchTab('legends')" data-tab="legends" class="mobile-nav-btn w-full text-left px-4 py-3 rounded-xl text-base font-semibold text-slate-200 hover:bg-white/10 flex items-center gap-3">
+                <i class="fa-solid fa-star w-5 text-center text-barcagold-500"></i> Legends & Current Squad
+            </button>
+            <button onclick="switchTab('trophies')" data-tab="trophies" class="mobile-nav-btn w-full text-left px-4 py-3 rounded-xl text-base font-semibold text-slate-200 hover:bg-white/10 flex items-center gap-3">
+                <i class="fa-solid fa-trophy w-5 text-center text-barcagold-500"></i> Trophy Cabinet (Honours)
+            </button>
+            <button onclick="switchTab('campnou')" data-tab="campnou" class="mobile-nav-btn w-full text-left px-4 py-3 rounded-xl text-base font-semibold text-slate-200 hover:bg-white/10 flex items-center gap-3">
+                <i class="fa-solid fa-futbol w-5 text-center text-blau-500"></i> Camp Nou, Clásico & XI Builder
+            </button>
+            <button onclick="switchTab('quiz')" data-tab="quiz" class="mobile-nav-btn w-full text-left px-4 py-3 rounded-xl text-base font-semibold text-slate-200 hover:bg-white/10 flex items-center gap-3">
+                <i class="fa-solid fa-bolt w-5 text-center text-barcagold-500"></i> Barça Trivia Quiz
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN SPA CONTENT -->
+    <main class="flex-grow">
+
+        <!-- ==================== TAB 1: HOME (MÉS QUE UN CLUB) ==================== -->
+        <section id="tab-home" class="page-section active">
+            <!-- Hero Banner -->
+            <div class="relative blaugrana-hero text-white overflow-hidden border-b border-white/10">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                        <div class="lg:col-span-7 space-y-6">
+                            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-barcagold-500/40 text-barcagold-400 text-xs font-bold tracking-widest uppercase">
+                                <i class="fa-solid fa-crown"></i> Founded November 29, 1899 • By Joan Gamper
+                            </div>
+                            <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight uppercase leading-none">
+                                Més Que <span class="text-transparent bg-clip-text bg-gradient-to-r from-barcagold-400 via-amber-300 to-grana-500">Un Club</span>
+                            </h1>
+                            <p class="text-slate-300 text-lg sm:text-xl leading-relaxed max-w-2xl font-light">
+                                More than a club. Owned by its supporters (<em class="text-barcagold-400 not-italic font-medium">socis</em>), forged by the philosophy of Total Football and <em class="text-barcagold-400 not-italic font-medium">La Masia</em>, and home to the greatest legends to ever grace the pitch.
+                            </p>
+                            <div class="flex flex-wrap gap-4 pt-3">
+                                <button onclick="switchTab('legends')" class="px-7 py-4 rounded-xl bg-gradient-to-r from-grana-500 to-grana-600 hover:from-grana-600 hover:to-grana-700 text-white font-bold shadow-lg shadow-grana-500/30 transition-all flex items-center gap-3 transform hover:-translate-y-0.5">
+                                    <span>Explore Legends & Squad</span>
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+                                <button onclick="switchTab('quiz')" class="px-7 py-4 rounded-xl bg-white/10 hover:bg-white/15 backdrop-blur-md border border-white/20 text-white font-bold transition-all flex items-center gap-3">
+                                    <i class="fa-solid fa-trophy text-barcagold-500"></i>
+                                    <span>Take the Culé Quiz</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right Hero Spotlight Card -->
+                        <div class="lg:col-span-5">
+                            <div class="relative rounded-3xl overflow-hidden shadow-2xl border-2 border-barcagold-500/30 bg-blau-900 group">
+                                <img src="https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=900&q=80" 
+                                     onerror="this.src='https://placehold.co/800x600/004D98/EDBB00?text=Spotify+Camp+Nou'"
+                                     alt="Spotify Camp Nou Stadium" 
+                                     class="w-full h-80 sm:h-96 object-cover group-hover:scale-105 transition-transform duration-700 opacity-85">
+                                <div class="absolute inset-0 bg-gradient-to-t from-blau-950 via-blau-950/40 to-transparent"></div>
+                                
+                                <!-- Top Badge -->
+                                <div class="absolute top-5 left-5 right-5 flex justify-between items-center">
+                                    <span class="px-3 py-1 rounded-full bg-grana-500 text-white text-xs font-bold uppercase tracking-wider shadow">Blaugrana Pride</span>
+                                    <span class="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-barcagold-400 text-xs font-bold border border-barcagold-500/30">
+                                        <i class="fa-solid fa-star mr-1"></i> 5x Champions of Europe
+                                    </span>
+                                </div>
+
+                                <div class="absolute bottom-6 left-6 right-6 flex items-end justify-between">
+                                    <div>
+                                        <p class="text-barcagold-400 text-xs font-bold uppercase tracking-widest">Cathedral of Football</p>
+                                        <h3 class="font-display text-3xl font-bold mt-1 uppercase">Spotify Camp Nou</h3>
+                                        <p class="text-slate-300 text-sm mt-1">Expanding to 105,000 seats — Largest stadium in Europe</p>
+                                    </div>
+                                    <button onclick="switchTab('campnou')" class="w-12 h-12 rounded-full bg-barcagold-500 text-blau-950 flex items-center justify-center shadow-lg hover:bg-barcagold-400 transition-colors flex-shrink-0">
+                                        <i class="fa-solid fa-arrow-up-right-from-square font-bold"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Club Statistics Bar -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div class="bg-slate-900/95 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-white/10 flex items-start gap-4 hover:border-barcagold-500/50 transition-all">
+                        <div class="w-12 h-12 rounded-xl bg-barcagold-500/20 text-barcagold-400 flex items-center justify-center text-xl flex-shrink-0 border border-barcagold-500/30">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Major Trophies</p>
+                            <h4 class="font-display text-3xl font-bold text-white mt-0.5">99+ Titles</h4>
+                            <p class="text-xs text-slate-400 mt-1">Including 27 La Liga, 31 Copa del Rey & 5 UCL crowns</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/95 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-white/10 flex items-start gap-4 hover:border-barcagold-500/50 transition-all">
+                        <div class="w-12 h-12 rounded-xl bg-grana-500/20 text-grana-500 flex items-center justify-center text-xl flex-shrink-0 border border-grana-500/40">
+                            <i class="fa-solid fa-futbol"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400">All-Time Top Scorer</p>
+                            <h4 class="font-display text-3xl font-bold text-white mt-0.5">672 Goals</h4>
+                            <p class="text-xs text-slate-400 mt-1">Lionel Messi in 778 official matches (2004–2021)</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/95 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-white/10 flex items-start gap-4 hover:border-barcagold-500/50 transition-all">
+                        <div class="w-12 h-12 rounded-xl bg-blau-500/20 text-sky-400 flex items-center justify-center text-xl flex-shrink-0 border border-blau-500/40">
+                            <i class="fa-solid fa-earth-europe"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Historic Trebles</p>
+                            <h4 class="font-display text-3xl font-bold text-white mt-0.5">2x Winners</h4>
+                            <p class="text-xs text-slate-400 mt-1">First European club to win two Continental Trebles (2009, 2015)</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/95 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-white/10 flex items-start gap-4 hover:border-barcagold-500/50 transition-all">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl flex-shrink-0 border border-emerald-500/30">
+                            <i class="fa-solid fa-medal"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Ballon d'Or Awards</p>
+                            <h4 class="font-display text-3xl font-bold text-white mt-0.5">12 Wins</h4>
+                            <p class="text-xs text-slate-400 mt-1">Won by Barça players (Cruyff, Stoichkov, Rivaldo, Ronaldinho, Messi)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Club History Timeline -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="text-center max-w-3xl mx-auto mb-10">
+                    <span class="px-3 py-1 rounded-full bg-blau-500/20 text-sky-400 border border-blau-500/30 text-xs font-bold uppercase tracking-widest">Interactive Heritage</span>
+                    <h2 class="font-display text-3xl sm:text-5xl font-bold text-white mt-3 uppercase">Golden Eras of FC Barcelona</h2>
+                    <p class="text-slate-400 mt-2">Click on any historic era below to explore how Barça revolutionized modern football.</p>
+                </div>
+
+                <!-- Era Selector Buttons -->
+                <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8" id="era-buttons">
+                    <button onclick="selectEra(0)" class="era-btn px-5 py-3 rounded-xl font-display font-bold uppercase tracking-wider text-sm transition-all bg-gradient-to-r from-blau-500 to-grana-500 text-white shadow-lg">
+                        1899: Joan Gamper
+                    </button>
+                    <button onclick="selectEra(1)" class="era-btn px-5 py-3 rounded-xl font-display font-bold uppercase tracking-wider text-sm transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 border border-white/10">
+                        1992: Cruyff's Dream Team
+                    </button>
+                    <button onclick="selectEra(2)" class="era-btn px-5 py-3 rounded-xl font-display font-bold uppercase tracking-wider text-sm transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 border border-white/10">
+                        2009: Pep's Sextuple
+                    </button>
+                    <button onclick="selectEra(3)" class="era-btn px-5 py-3 rounded-xl font-display font-bold uppercase tracking-wider text-sm transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 border border-white/10">
+                        2015: The MSN Treble
+                    </button>
+                    <button onclick="selectEra(4)" class="era-btn px-5 py-3 rounded-xl font-display font-bold uppercase tracking-wider text-sm transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 border border-white/10">
+                        2024+: La Masia Renaissance
+                    </button>
+                </div>
+
+                <!-- Dynamic Era Display Card -->
+                <div id="era-display" class="bg-slate-900 rounded-3xl p-6 sm:p-10 border border-white/10 shadow-2xl">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- La Masia Academy Spotlight -->
+            <div class="bg-gradient-to-b from-blau-900/60 to-slate-950 border-t border-white/10 py-16">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                        <div class="lg:col-span-6 space-y-5">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-barcagold-500/20 text-barcagold-400 border border-barcagold-500/30 text-xs font-bold uppercase tracking-wider">
+                                <i class="fa-solid fa-seedling"></i> The Crown Jewel of Youth Development
+                            </div>
+                            <h2 class="font-display text-3xl sm:text-5xl font-bold text-white uppercase leading-tight">
+                                La Masia: Where Legends Are Raised
+                            </h2>
+                            <p class="text-slate-300 leading-relaxed">
+                                Established in 1979 inside an ancient Catalan country farmhouse built in 1702 next to Camp Nou after a proposal by <strong>Johan Cruyff</strong>, La Masia de Can Planes became the most famous football academy on Earth.
+                            </p>
+                            <p class="text-slate-300 leading-relaxed">
+                                Every youth team from Under-8s to Barça Atlètic plays the exact same <strong>4-3-3 positional possession system</strong>, prioritizing technical intelligence, rondo drills, quick one-touch passing, and humility.
+                            </p>
+                            <div class="bg-grana-500/20 border-l-4 border-barcagold-500 p-5 rounded-r-2xl">
+                                <h4 class="font-bold text-barcagold-400 flex items-center gap-2">
+                                    <i class="fa-solid fa-star"></i> Unprecedented Ballon d'Or History (2010)
+                                </h4>
+                                <p class="text-sm text-slate-200 mt-1">
+                                    In 2010, FC Barcelona's La Masia became the first and only youth academy in football history to occupy all three spots on the Ballon d'Or podium: <strong>1st Lionel Messi, 2nd Andrés Iniesta, 3rd Xavi Hernández</strong>. And on November 25, 2012, Barça fielded a team composed of <strong>all 11 La Masia graduates</strong> simultaneously on the pitch!
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div class="bg-slate-900/90 p-6 rounded-3xl border border-white/10">
+                                <span class="text-xs font-bold uppercase text-barcagold-400">Golden Generation I</span>
+                                <h3 class="font-display text-2xl font-bold text-white mt-1">The Architects</h3>
+                                <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-barcagold-500"></i> Pep Guardiola (Class of '90)</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-barcagold-500"></i> Xavi Hernández (Class of '98)</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-barcagold-500"></i> Carles Puyol (Class of '99)</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-barcagold-500"></i> Andrés Iniesta (Class of '02)</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-barcagold-500"></i> Lionel Messi (Class of '04)</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-barcagold-500"></i> Sergio Busquets & Gerard Piqué</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-slate-900/90 p-6 rounded-3xl border border-white/10">
+                                <span class="text-xs font-bold uppercase text-sky-400">New Generation</span>
+                                <h3 class="font-display text-2xl font-bold text-white mt-1">The Future Is Now</h3>
+                                <ul class="mt-4 space-y-2.5 text-sm text-slate-300">
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-bolt text-sky-400"></i> Lamine Yamal (Record Breaker)</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-bolt text-sky-400"></i> Gavi (Golden Boy Winner)</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-bolt text-sky-400"></i> Pau Cubarsí (Defensive Prodigy)</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-bolt text-sky-400"></i> Alejandro Balde (Left-Back)</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-bolt text-sky-400"></i> Fermín López & Marc Casadó</li>
+                                    <li class="flex items-center gap-2"><i class="fa-solid fa-bolt text-sky-400"></i> Dani Olmo (Returned Home)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: LEGENDS & SQUAD ==================== -->
+        <section id="tab-legends" class="page-section py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Header -->
+                <div class="text-center max-w-3xl mx-auto mb-10">
+                    <span class="px-3 py-1 rounded-full bg-grana-500/20 text-barcagold-400 border border-grana-500/40 text-xs font-bold uppercase tracking-widest">Blaugrana Icons</span>
+                    <h2 class="font-display text-4xl sm:text-5xl font-bold text-white mt-3 uppercase">Legends, Stars & Masterminds</h2>
+                    <p class="text-slate-400 mt-3">
+                        Filter by category and click on any player or manager card to inspect their career statistics, trophies won, and defining Barça moments.
+                    </p>
+                </div>
+
+                <!-- Category Filters -->
+                <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10" id="players-filters">
+                    <button onclick="filterPlayers('all')" data-filter="all" class="player-filter-btn px-5 py-2.5 rounded-full text-sm font-bold transition-all bg-gradient-to-r from-blau-500 to-grana-500 text-white shadow-lg">
+                        All Icons (12)
+                    </button>
+                    <button onclick="filterPlayers('legend')" data-filter="legend" class="player-filter-btn px-5 py-2.5 rounded-full text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 border border-white/10 transition-all">
+                        <i class="fa-solid fa-crown text-barcagold-500 mr-1.5"></i> Club Legends
+                    </button>
+                    <button onclick="filterPlayers('current')" data-filter="current" class="player-filter-btn px-5 py-2.5 rounded-full text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 border border-white/10 transition-all">
+                        <i class="fa-solid fa-fire text-grana-500 mr-1.5"></i> Current Stars
+                    </button>
+                    <button onclick="filterPlayers('manager')" data-filter="manager" class="player-filter-btn px-5 py-2.5 rounded-full text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 border border-white/10 transition-all">
+                        <i class="fa-solid fa-chess-king text-sky-400 mr-1.5"></i> Legendary Managers
+                    </button>
+                </div>
+
+                <!-- Players Grid (Rendered via JS) -->
+                <div id="players-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7"></div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 3: TROPHY CABINET (HONOURS) ==================== -->
+        <section id="tab-trophies" class="page-section py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">
+                
+                <!-- Header -->
+                <div class="text-center max-w-3xl mx-auto">
+                    <span class="px-3 py-1 rounded-full bg-barcagold-500/20 text-barcagold-400 border border-barcagold-500/30 text-xs font-bold uppercase tracking-widest">Museum of Glory</span>
+                    <h2 class="font-display text-4xl sm:text-5xl font-bold text-white mt-3 uppercase">The Blaugrana Trophy Cabinet</h2>
+                    <p class="text-slate-400 mt-3">
+                        FC Barcelona is one of the most decorated clubs in world football history, renowned for winning every single competition possible in a single calendar year.
+                    </p>
+                </div>
+
+                <!-- Filter Trophies By Type -->
+                <div class="flex flex-wrap justify-center gap-3">
+                    <button onclick="filterTrophies('all')" data-tfilter="all" class="trophy-filter-btn px-5 py-2.5 rounded-xl text-sm font-bold bg-barcagold-500 text-blau-950 shadow-md transition-all">
+                        All Major Honours
+                    </button>
+                    <button onclick="filterTrophies('international')" data-tfilter="international" class="trophy-filter-btn px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 border border-white/10 transition-all">
+                        <i class="fa-solid fa-earth-americas mr-1.5 text-sky-400"></i> European & Worldwide
+                    </button>
+                    <button onclick="filterTrophies('domestic')" data-tfilter="domestic" class="trophy-filter-btn px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 border border-white/10 transition-all">
+                        <i class="fa-solid fa-flag mr-1.5 text-grana-500"></i> Domestic Spanish Titles
+                    </button>
+                </div>
+
+                <!-- Trophy Cards Grid -->
+                <div id="trophies-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+                    <!-- Populated via JS -->
+                </div>
+
+                <!-- The Two Trebles & 2009 Sextuple Spotlight -->
+                <div class="bg-gradient-to-r from-blau-900 via-slate-900 to-grana-700 rounded-3xl p-8 sm:p-12 border border-barcagold-500/30 shadow-2xl">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                        <div class="lg:col-span-7 space-y-4">
+                            <span class="px-3 py-1 rounded-full bg-barcagold-500 text-blau-950 text-xs font-extrabold uppercase tracking-wider">Football Immortality</span>
+                            <h3 class="font-display text-3xl sm:text-4xl font-bold text-white uppercase">
+                                2009 Sextuple & Two Historic Trebles (2009, 2015)
+                            </h3>
+                            <p class="text-slate-200 leading-relaxed">
+                                Under Pep Guardiola in <strong>2009</strong>, FC Barcelona achieved the unprecedented <em>Sextuple</em> (winning all 6 trophies in one calendar year: La Liga, Copa del Rey, UEFA Champions League, Supercopa de España, UEFA Super Cup, and FIFA Club World Cup).
+                            </p>
+                            <p class="text-slate-200 leading-relaxed">
+                                Six years later in <strong>2015</strong>, under Luis Enrique and powered by the legendary <strong>MSN</strong> trident (Messi, Suárez, Neymar — who scored 122 goals in that season alone), Barça became the first club in European history to win the Continental Treble twice.
+                            </p>
+                        </div>
+
+                        <div class="lg:col-span-5 grid grid-cols-2 gap-4">
+                            <div class="bg-black/40 backdrop-blur-sm p-5 rounded-2xl border border-barcagold-500/30 text-center">
+                                <div class="text-3xl text-barcagold-400 mb-2"><i class="fa-solid fa-6"></i><i class="fa-solid fa-trophy ml-1"></i></div>
+                                <h4 class="font-display text-xl font-bold text-white">2009 Sextuple</h4>
+                                <p class="text-xs text-slate-300 mt-1">6 out of 6 Trophies Won under Pep Guardiola</p>
+                            </div>
+                            <div class="bg-black/40 backdrop-blur-sm p-5 rounded-2xl border border-barcagold-500/30 text-center">
+                                <div class="text-3xl text-barcagold-400 mb-2"><i class="fa-solid fa-fire-flame-curved"></i></div>
+                                <h4 class="font-display text-xl font-bold text-white">2015 Treble</h4>
+                                <p class="text-xs text-slate-300 mt-1">3-1 UCL Final win vs Juventus in Berlin</p>
+                            </div>
+                            <div class="col-span-2 bg-black/40 backdrop-blur-sm p-5 rounded-2xl border border-white/10">
+                                <span class="text-xs font-bold uppercase text-barcagold-400 block mb-1">All 5 Champions League Finals Won:</span>
+                                <div class="flex flex-wrap gap-2 text-xs text-slate-200 font-semibold">
+                                    <span class="px-2.5 py-1 rounded bg-white/10">1992 Wembley (1-0 vs Sampdoria)</span>
+                                    <span class="px-2.5 py-1 rounded bg-white/10">2006 Paris (2-1 vs Arsenal)</span>
+                                    <span class="px-2.5 py-1 rounded bg-white/10">2009 Rome (2-0 vs Man Utd)</span>
+                                    <span class="px-2.5 py-1 rounded bg-white/10">2011 Wembley (3-1 vs Man Utd)</span>
+                                    <span class="px-2.5 py-1 rounded bg-white/10">2015 Berlin (3-1 vs Juventus)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== TAB 4: CAMP NOU, EL CLÁSICO & XI BUILDER ==================== -->
+        <section id="tab-campnou" class="page-section py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+                
+                <!-- Part 1: Spotify Camp Nou & Espai Barça -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center bg-slate-900 rounded-3xl p-6 sm:p-10 border border-white/10 shadow-xl">
+                    <div class="lg:col-span-7 space-y-5">
+                        <span class="px-3 py-1 rounded-full bg-blau-500/20 text-sky-400 border border-blau-500/40 text-xs font-bold uppercase tracking-widest">Fortress Since 1957</span>
+                        <h2 class="font-display text-3xl sm:text-5xl font-bold text-white uppercase">Spotify Camp Nou & Espai Barça</h2>
+                        <p class="text-slate-300 leading-relaxed">
+                            Inaugurated on September 24, 1957, Camp Nou has been the beating heart of Catalonia for generations. Through the revolutionary <strong>Espai Barça</strong> transformation project, the stadium is being modernized into an architectural masterpiece with a 360-degree giant screen roof and capacity increased to <strong>105,000 spectators</strong>.
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                            <div class="bg-slate-950 p-4 rounded-2xl border border-white/10">
+                                <span class="text-barcagold-400 font-display text-2xl font-bold block">105,000</span>
+                                <span class="text-xs text-slate-400">New Expanded Seating Capacity</span>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-2xl border border-white/10">
+                                <span class="text-barcagold-400 font-display text-2xl font-bold block">30,000 m²</span>
+                                <span class="text-xs text-slate-400">Solar Roof Panels (Sustainability)</span>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-2xl border border-white/10">
+                                <span class="text-barcagold-400 font-display text-2xl font-bold block">Barça Tour</span>
+                                <span class="text-xs text-slate-400">Immersive Museum & Trophy Room</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-5">
+                        <div class="rounded-2xl overflow-hidden border border-white/15 relative h-72">
+                            <img src="https://images.unsplash.com/photo-1577223625816-7546f13df25d?auto=format&fit=crop&w=800&q=80" 
+                                 onerror="this.src='https://placehold.co/700x500/004D98/EDBB00?text=Camp+Nou+Atmosphere'"
+                                 alt="Camp Nou" 
+                                 class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                            <div class="absolute bottom-4 left-4 right-4">
+                                <span class="text-xs font-bold uppercase text-barcagold-400">Anthem: Cant del Barça</span>
+                                <p class="text-sm text-white italic">"Tot el camp, és un clam, som la gent blaugrana..."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 2: Iconic El Clásico Victories -->
+                <div>
+                    <div class="text-center max-w-3xl mx-auto mb-10">
+                        <span class="px-3 py-1 rounded-full bg-grana-500/20 text-barcagold-400 border border-grana-500/40 text-xs font-bold uppercase tracking-widest">The Greatest Rivalry in Sports</span>
+                        <h3 class="font-display text-3xl sm:text-4xl font-bold text-white mt-2 uppercase">Historic El Clásico Triumphs</h3>
+                        <p class="text-slate-400 mt-2">Select a legendary match below to relive the nights when Barça conquered Real Madrid in unforgettable style.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                        <div class="bg-slate-900 p-6 rounded-3xl border border-white/10 hover:border-barcagold-500/50 transition-all flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="text-xs font-bold uppercase text-slate-400">Feb 17, 1974 • Bernabéu</span>
+                                    <span class="px-2.5 py-0.5 rounded bg-barcagold-500 text-blau-950 font-extrabold text-xs">0 - 5</span>
+                                </div>
+                                <h4 class="font-display text-xl font-bold text-white uppercase">Cruyff's Masterclass in Madrid</h4>
+                                <p class="text-sm text-slate-400 mt-2 leading-relaxed">
+                                    In his debut season, Johan Cruyff orchestrated a stunning 0-5 demolition at the Santiago Bernabéu, ending Barça's 14-year title drought and changing the club's mentality forever.
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-white/10 text-xs text-barcagold-400 font-semibold">
+                                Scorers: Asensi (2), Cruyff, Juan Carlos, Sotil
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 p-6 rounded-3xl border border-white/10 hover:border-barcagold-500/50 transition-all flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="text-xs font-bold uppercase text-slate-400">May 2, 2009 • Bernabéu</span>
+                                    <span class="px-2.5 py-0.5 rounded bg-barcagold-500 text-blau-950 font-extrabold text-xs">2 - 6</span>
+                                </div>
+                                <h4 class="font-display text-xl font-bold text-white uppercase">Birth of the "False 9" Messi</h4>
+                                <p class="text-sm text-slate-400 mt-2 leading-relaxed">
+                                    Pep Guardiola surprised the world by deploying Lionel Messi as a "False 9". Xavi provided 4 assists, Carles Puyol kissed his Catalan captain's armband, and Barça scored six at the Bernabéu.
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-white/10 text-xs text-barcagold-400 font-semibold">
+                                Scorers: Henry (2), Messi (2), Puyol, Piqué
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 p-6 rounded-3xl border border-white/10 hover:border-barcagold-500/50 transition-all flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="text-xs font-bold uppercase text-slate-400">Nov 29, 2010 • Camp Nou</span>
+                                    <span class="px-2.5 py-0.5 rounded bg-barcagold-500 text-blau-950 font-extrabold text-xs">5 - 0</span>
+                                </div>
+                                <h4 class="font-display text-xl font-bold text-white uppercase">"La Manita" of Tiki-Taka</h4>
+                                <p class="text-sm text-slate-400 mt-2 leading-relaxed">
+                                    Widely regarded as the single greatest display of Tiki-Taka football in history. Guardiola's Barça defeated José Mourinho's previously unbeaten Real Madrid 5-0 on the club's 111th birthday.
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-white/10 text-xs text-barcagold-400 font-semibold">
+                                Scorers: Villa (2), Xavi, Pedro, Jeffrén
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 p-6 rounded-3xl border border-white/10 hover:border-barcagold-500/50 transition-all flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="text-xs font-bold uppercase text-slate-400">Oct 26, 2024 • Bernabéu</span>
+                                    <span class="px-2.5 py-0.5 rounded bg-barcagold-500 text-blau-950 font-extrabold text-xs">0 - 4</span>
+                                </div>
+                                <h4 class="font-display text-xl font-bold text-white uppercase">Hansi Flick & La Masia Statement</h4>
+                                <p class="text-sm text-slate-400 mt-2 leading-relaxed">
+                                    With 6 La Masia graduates in the lineup, Barça stunned the Bernabéu 0-4. Lamine Yamal (17) became the youngest scorer in El Clásico history alongside a brace from Lewandowski and a goal from Raphinha.
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-white/10 text-xs text-barcagold-400 font-semibold">
+                                Scorers: Lewandowski (2), Lamine Yamal, Raphinha
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 3: Interactive All-Time Barça XI Pitch Builder -->
+                <div class="bg-slate-900 rounded-3xl p-6 sm:p-10 border border-white/10 shadow-2xl">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                        <div>
+                            <span class="px-3 py-1 rounded-full bg-barcagold-500/20 text-barcagold-400 text-xs font-bold uppercase tracking-wider">Interactive Tactical Board</span>
+                            <h3 class="font-display text-3xl sm:text-4xl font-bold text-white mt-2 uppercase">Build Your All-Time Barça 4-3-3 XI</h3>
+                            <p class="text-slate-400 text-sm mt-1">Click on any position on the pitch or use the preset eras to customize your dream Blaugrana starting lineup.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="applyPresetXI('alltime')" class="px-4 py-2 rounded-xl bg-gradient-to-r from-blau-500 to-grana-500 text-white text-xs font-bold uppercase tracking-wider shadow">
+                                Dream All-Time XI
+                            </button>
+                            <button onclick="applyPresetXI('2011')" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold uppercase tracking-wider border border-white/10">
+                                2011 Wembley XI
+                            </button>
+                            <button onclick="applyPresetXI('modern')" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold uppercase tracking-wider border border-white/10">
+                                Current Stars XI
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                        <!-- Visual Football Pitch (4-3-3) -->
+                        <div class="lg:col-span-8">
+                            <div class="football-pitch rounded-3xl border-4 border-white/80 p-4 sm:p-6 min-h-[480px] flex flex-col justify-between relative overflow-hidden">
+                                <!-- Pitch Center Line & Circle -->
+                                <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-white/40 -translate-y-1/2 pointer-events-none"></div>
+                                <div class="absolute top-1/2 left-1/2 w-28 h-28 rounded-full border-2 border-white/40 -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+
+                                <!-- Forwards Row (LW, ST, RW) -->
+                                <div class="grid grid-cols-3 gap-2 relative z-10 pt-2">
+                                    <div id="pos-LW" onclick="cyclePositionPlayer('LW')" class="cursor-pointer flex flex-col items-center group"></div>
+                                    <div id="pos-ST" onclick="cyclePositionPlayer('ST')" class="cursor-pointer flex flex-col items-center group -mt-2"></div>
+                                    <div id="pos-RW" onclick="cyclePositionPlayer('RW')" class="cursor-pointer flex flex-col items-center group"></div>
+                                </div>
+
+                                <!-- Midfield Row (LCM, CDM, RCM) -->
+                                <div class="grid grid-cols-3 gap-2 relative z-10 my-4">
+                                    <div id="pos-LCM" onclick="cyclePositionPlayer('LCM')" class="cursor-pointer flex flex-col items-center group"></div>
+                                    <div id="pos-CDM" onclick="cyclePositionPlayer('CDM')" class="cursor-pointer flex flex-col items-center group mt-4"></div>
+                                    <div id="pos-RCM" onclick="cyclePositionPlayer('RCM')" class="cursor-pointer flex flex-col items-center group"></div>
+                                </div>
+
+                                <!-- Defense Row (LB, LCB, RCB, RB) -->
+                                <div class="grid grid-cols-4 gap-1 sm:gap-2 relative z-10">
+                                    <div id="pos-LB" onclick="cyclePositionPlayer('LB')" class="cursor-pointer flex flex-col items-center group"></div>
+                                    <div id="pos-LCB" onclick="cyclePositionPlayer('LCB')" class="cursor-pointer flex flex-col items-center group"></div>
+                                    <div id="pos-RCB" onclick="cyclePositionPlayer('RCB')" class="cursor-pointer flex flex-col items-center group"></div>
+                                    <div id="pos-RB" onclick="cyclePositionPlayer('RB')" class="cursor-pointer flex flex-col items-center group"></div>
+                                </div>
+
+                                <!-- Goalkeeper Row (GK) -->
+                                <div class="flex justify-center relative z-10 pb-1">
+                                    <div id="pos-GK" onclick="cyclePositionPlayer('GK')" class="cursor-pointer flex flex-col items-center group"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Lineup Summary & Instructions -->
+                        <div class="lg:col-span-4 space-y-5">
+                            <div class="bg-slate-950 p-6 rounded-2xl border border-white/10">
+                                <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+                                    <span class="text-xs font-bold uppercase text-barcagold-400">Formation: Classic 4-3-3</span>
+                                    <span class="text-xs text-slate-400"><i class="fa-solid fa-hand-pointer mr-1"></i> Click jersey to swap</span>
+                                </div>
+                                <h4 class="font-display text-xl font-bold text-white uppercase mb-3">Selected Starting XI</h4>
+                                <ul id="lineup-list-summary" class="space-y-2 text-xs sm:text-sm text-slate-300">
+                                    <!-- Populated via JS -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== TAB 5: BARÇA TRIVIA QUIZ ==================== -->
+        <section id="tab-quiz" class="page-section py-12">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Quiz Header -->
+                <div class="text-center mb-8">
+                    <span class="px-3.5 py-1 rounded-full bg-barcagold-500/20 text-barcagold-400 border border-barcagold-500/30 text-xs font-bold uppercase tracking-widest">Test Your Blaugrana DNA</span>
+                    <h2 class="font-display text-4xl sm:text-5xl font-bold text-white mt-2 uppercase">The Ultimate FC Barcelona Quiz</h2>
+                    <p class="text-slate-400 text-sm sm:text-base mt-2">
+                        Answer 10 questions about FC Barcelona's history, top scorers, La Masia, and iconic Champions League nights to earn your official Culé rank!
+                    </p>
+                </div>
+
+                <!-- Quiz Card Container -->
+                <div class="bg-slate-900 rounded-3xl shadow-2xl border border-white/10 overflow-hidden">
+                    
+                    <!-- Top Progress Header -->
+                    <div id="quiz-header" class="bg-gradient-to-r from-blau-800 via-blau-900 to-grana-700 text-white p-6 border-b border-white/10">
+                        <div class="flex justify-between items-center mb-3">
+                            <span id="quiz-counter" class="text-xs font-bold uppercase tracking-widest text-barcagold-400">Question 1 of 10</span>
+                            <span id="quiz-score-live" class="text-xs font-bold bg-black/40 border border-white/15 px-3.5 py-1 rounded-full">Score: 0</span>
+                        </div>
+                        <!-- Progress Bar -->
+                        <div class="w-full bg-black/40 h-2.5 rounded-full overflow-hidden">
+                            <div id="quiz-progress-bar" class="bg-gradient-to-r from-barcagold-500 to-grana-500 h-full rounded-full transition-all duration-500" style="width: 10%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Question Body -->
+                    <div id="quiz-body" class="p-6 sm:p-8 space-y-6">
+                        <div id="quiz-category-badge" class="inline-block px-3 py-1 rounded-lg bg-blau-500/20 text-sky-400 border border-blau-500/30 text-xs font-bold uppercase tracking-wider">
+                            Club History
+                        </div>
+                        
+                        <h3 id="quiz-question" class="font-display text-2xl sm:text-3xl font-bold text-white leading-snug">
+                            Loading question...
+                        </h3>
+
+                        <!-- Answer Options -->
+                        <div id="quiz-options" class="space-y-3"></div>
+
+                        <!-- Instant Feedback & Fun Fact Box -->
+                        <div id="quiz-explanation" class="hidden p-5 rounded-2xl border text-sm leading-relaxed"></div>
+
+                        <!-- Next Question Button -->
+                        <div class="flex justify-end pt-2">
+                            <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="hidden px-7 py-3.5 rounded-xl bg-gradient-to-r from-blau-500 to-grana-500 hover:from-blau-600 hover:to-grana-600 text-white font-bold shadow-lg transition-all items-center gap-2">
+                                <span>Next Question</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Final Quiz Result Screen -->
+                    <div id="quiz-result" class="hidden p-8 sm:p-12 text-center space-y-6">
+                        <div id="result-icon" class="w-24 h-24 rounded-3xl mx-auto flex items-center justify-center text-5xl shadow-xl bg-barcagold-500/20 border border-barcagold-500/40 text-barcagold-400">
+                            🏆
+                        </div>
+                        
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Your Official Barça Rank</span>
+                            <h3 id="result-title" class="font-display text-4xl sm:text-5xl font-bold text-white mt-1 uppercase">
+                                Culé Legend
+                            </h3>
+                        </div>
+
+                        <div class="inline-block bg-slate-950 px-8 py-4 rounded-2xl border border-white/10">
+                            <span class="text-xs uppercase tracking-wider text-slate-400 block">Final Score</span>
+                            <span id="result-score-text" class="font-display text-4xl font-extrabold text-barcagold-400">10 / 10</span>
+                        </div>
+
+                        <p id="result-description" class="text-slate-300 max-w-lg mx-auto leading-relaxed"></p>
+
+                        <div class="pt-4 flex flex-wrap justify-center gap-4">
+                            <button onclick="restartQuiz()" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-grana-500 to-grana-600 hover:from-grana-600 hover:to-grana-700 text-white font-bold shadow-lg transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-rotate-right"></i> Play Again
+                            </button>
+                            <button onclick="switchTab('legends')" class="px-7 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold transition-all flex items-center gap-2 border border-white/10">
+                                <i class="fa-solid fa-star text-barcagold-500"></i> Explore Legends
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- PLAYER / LEGEND DETAIL MODAL -->
+    <div id="player-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+        <div class="bg-slate-900 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-barcagold-500/30 relative text-white" onclick="event.stopPropagation()">
+            <!-- Close Button -->
+            <button onclick="closePlayerModal()" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/60 hover:bg-grana-500 text-white flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Top Banner -->
+            <div class="relative h-56 sm:h-64 blaugrana-stripes flex items-end p-6 sm:p-8">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
+                <div class="relative z-10 flex items-end justify-between w-full">
+                    <div>
+                        <span id="modal-role-badge" class="px-3 py-1 rounded-full bg-barcagold-500 text-blau-950 text-xs font-extrabold uppercase tracking-wider">Legend</span>
+                        <h3 id="modal-player-name" class="font-display text-3xl sm:text-5xl font-bold uppercase mt-2">Lionel Messi</h3>
+                        <p id="modal-player-years" class="text-barcagold-400 text-sm font-semibold"></p>
+                    </div>
+                    <div id="modal-jersey-num" class="font-display text-6xl sm:text-7xl font-extrabold text-white/25 select-none leading-none">
+                        #10
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 sm:p-8 space-y-6">
+                <!-- Key Stats Row -->
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-white/10">
+                        <span class="text-[11px] font-bold uppercase text-slate-400 block">Matches / Era</span>
+                        <span id="modal-stat-apps" class="font-display text-2xl font-bold text-white mt-1 block">778</span>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-white/10">
+                        <span class="text-[11px] font-bold uppercase text-slate-400 block">Goals / Impact</span>
+                        <span id="modal-stat-goals" class="font-display text-2xl font-bold text-barcagold-400 mt-1 block">672 Goals</span>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-white/10">
+                        <span class="text-[11px] font-bold uppercase text-slate-400 block">Barça Trophies</span>
+                        <span id="modal-stat-trophies" class="font-display text-2xl font-bold text-emerald-400 mt-1 block">35 Titles</span>
+                    </div>
+                </div>
+
+                <p id="modal-player-bio" class="text-slate-300 leading-relaxed text-sm sm:text-base"></p>
+
+                <div class="bg-blau-900/40 border-l-4 border-barcagold-500 p-4 rounded-r-2xl">
+                    <span class="text-xs font-bold uppercase text-barcagold-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt"></i> Defining Blaugrana Moment
+                    </span>
+                    <p id="modal-player-moment" class="text-sm text-slate-200 mt-1 leading-relaxed"></p>
+                </div>
+
+                <div class="flex justify-end pt-2">
+                    <button onclick="closePlayerModal()" class="px-6 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition-colors border border-white/10">
+                        Close Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-blau-950 text-slate-400 border-t border-white/10 mt-16">
+        <div class="h-1 w-full gold-ribbon"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blau-500 to-grana-500 flex items-center justify-center text-barcagold-400 shadow">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <span class="font-display font-bold text-xl text-white tracking-wider">FC BARCELONA HUB</span>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-3 max-w-xs leading-relaxed">
+                        An interactive tribute to Futbol Club Barcelona — celebrating over 125 years of Blaugrana history, La Masia excellence, and legendary football.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap gap-3 md:justify-center text-xs font-semibold">
+                    <button onclick="switchTab('home')" class="hover:text-barcagold-400 transition-colors">Home</button>
+                    <span>•</span>
+                    <button onclick="switchTab('legends')" class="hover:text-barcagold-400 transition-colors">Legends & Squad</button>
+                    <span>•</span>
+                    <button onclick="switchTab('trophies')" class="hover:text-barcagold-400 transition-colors">Trophy Cabinet</button>
+                    <span>•</span>
+                    <button onclick="switchTab('campnou')" class="hover:text-barcagold-400 transition-colors">Camp Nou & XI Builder</button>
+                    <span>•</span>
+                    <button onclick="switchTab('quiz')" class="hover:text-barcagold-400 transition-colors">Barça Quiz</button>
+                </div>
+
+                <div class="md:text-right text-xs text-slate-400">
+                    <p class="text-white font-semibold">Visca el Barça i Visca Catalunya! 🔵🔴</p>
+                    <p class="mt-1">Més que un club • Since 1899</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        // 1. CLUB ERAS TIMELINE DATA
+        const erasData = [
+            {
+                year: "1899",
+                title: "The Founding by Joan Gamper & Blaugrana Birth",
+                subtitle: "October 22, 1899 — A newspaper advert changes football history forever",
+                desc: "Swiss football pioneer Hans 'Joan' Gamper placed an advertisement in Los Deportes magazine inviting football enthusiasts to form a club in Barcelona. On November 29, 1899, eleven men gathered at the Gimnàs Solé to sign the foundation act of Foot-Ball Club Barcelona, adopting the deep blue and garnet red (Blaugrana) colors inspired by FC Basel.",
+                highlights: [
+                    "First trophy won: Copa Macaya in 1902 & first Copa del Rey in 1910",
+                    "Paulino Alcántara becomes the club's first superstar, scoring 395 goals (including friendlies)",
+                    "In 1929, FC Barcelona wins the inaugural Spanish La Liga championship"
+                ],
+                badge: "Foundation Era"
+            },
+            {
+                year: "1988–1996",
+                title: "Johan Cruyff's 'Dream Team' & Wembley 1992",
+                subtitle: "Total Football arrives at Camp Nou and delivers the first European Cup",
+                desc: "Having already been an idol as a player in the 1970s, Johan Cruyff returned as manager in 1988 and instilled a fearless possession-based 3-4-3 / 4-3-3 philosophy. Featuring Pep Guardiola, Ronald Koeman, Michael Laudrup, Romário, and Hristo Stoichkov, the 'Dream Team' won four consecutive La Liga titles and lifted Barça's first-ever European Cup at Wembley in 1992.",
+                highlights: [
+                    "May 20, 1992: Ronald Koeman's 111th-minute thunderbolt free-kick beats Sampdoria 1-0 at Wembley",
+                    "4 consecutive La Liga titles from 1991 to 1994",
+                    "Cruyff establishes the unified tactical blueprint for all La Masia youth teams"
+                ],
+                badge: "Total Football Revolution"
+            },
+            {
+                year: "2008–2012",
+                title: "Pep Guardiola's Sextuple & Peak Tiki-Taka",
+                subtitle: "The greatest team in football history wins 14 out of 19 possible trophies",
+                desc: "In 2008, former La Masia captain Pep Guardiola took charge of the first team. Built around homegrown maestros Xavi, Andrés Iniesta, Sergio Busquets, Carles Puyol, and an unstoppable Lionel Messi, Barça mesmerized the planet. In 2009, they became the first club in history to win all 6 trophies in a single calendar year (The Sextuple).",
+                highlights: [
+                    "2009 Sextuple: La Liga, Copa del Rey, Champions League, Spanish Super Cup, UEFA Super Cup, Club World Cup",
+                    "Historic 2-6 win at the Bernabéu (2009) and 5-0 'La Manita' at Camp Nou (2010)",
+                    "2011 Champions League Final at Wembley (3-1 vs Manchester United) — hailed by Sir Alex Ferguson as the best team he ever faced"
+                ],
+                badge: "The Golden Sextuple"
+            },
+            {
+                year: "2014–2017",
+                title: "The MSN Trident & The Second Historic Treble",
+                subtitle: "Messi, Suárez, and Neymar form the deadliest attacking trio of all time",
+                desc: "Under manager Luis Enrique in 2014/15, South American superstars Lionel Messi, Luis Suárez, and Neymar Jr. combined for a mind-boggling 122 goals in a single season (and 364 goals across three seasons together). Barça defeated the reigning champions of England, France, Germany, and Italy to claim their second Continental Treble in Berlin.",
+                highlights: [
+                    "June 6, 2015: Goals from Rakitić, Suárez, and Neymar defeat Juventus 3-1 in the UCL Final",
+                    "Barça becomes the first European club to win the Treble twice (2009 & 2015)",
+                    "March 8, 2017: 'La Remontada' — historic 6-1 comeback win over PSG in the Champions League"
+                ],
+                badge: "MSN Era"
+            },
+            {
+                year: "2024–Present",
+                title: "La Masia Renaissance & The New Spotify Camp Nou",
+                subtitle: "A fearless new generation led by Lamine Yamal, Pedri, Gavi & Cubarsí",
+                desc: "True to its roots, FC Barcelona has entered an exciting new chapter powered by teenage prodigies from La Masia alongside world-class leaders. With Lamine Yamal breaking decades-old records, Pedri orchestrating the midfield, and the imminent return to the 105,000-capacity Spotify Camp Nou, the Blaugrana future shines bright.",
+                highlights: [
+                    "Lamine Yamal becomes the youngest scorer in La Liga, El Clásico, and Euro history, winning the Kopa Trophy",
+                    "Back-to-back Kopa Trophy & Golden Boy winners: Pedri (2021), Gavi (2022), Lamine Yamal (2024)",
+                    "Espai Barça transformation prepares Europe's largest and most modern stadium"
+                ],
+                badge: "Next Gen Blaugrana"
+            }
+        ];
+
+        // 2. LEGENDS, CURRENT STARS & MANAGERS DATA (12 PROFILES)
+        const playersData = [
+            {
+                id: 1,
+                name: "Lionel Messi",
+                role: "legend",
+                roleLabel: "Greatest of All Time",
+                position: "Forward / Right Wing / False 9",
+                jersey: "#10",
+                years: "2004 – 2021",
+                apps: "778 Matches",
+                goals: "672 Goals / 303 Assists",
+                trophies: "35 Trophies",
+                shortDesc: "The undisputed GOAT. All-time record scorer, appearance maker, and trophy winner in FC Barcelona history, winning a record Ballon d'Or haul in Blaugrana.",
+                fullBio: "Arriving at La Masia from Rosario at age 13 with his first contract famously signed on a paper napkin on December 14, 2000, Lionel Messi rewrote every record book in football history. He scored 91 goals in a single calendar year (2012), won 6 of his 8 Ballon d'Or awards while wearing the Barça shirt, and remains the most beloved icon in Camp Nou history.",
+                moment: "Scoring headers and long-range strikes in the 2009 and 2011 Champions League Finals, and holding up his #10 shirt to the Santiago Bernabéu crowd after his 92nd-minute winner (his 500th Barça goal) in April 2017."
+            },
+            {
+                id: 2,
+                name: "Johan Cruyff",
+                role: "manager",
+                roleLabel: "Player & Mastermind",
+                position: "Forward & Head Coach",
+                jersey: "#14",
+                years: "1973–1978 (Player) / 1988–1996 (Coach)",
+                apps: "180 Apps / 430 Coached",
+                goals: "60 Goals / 11 Titles Won",
+                trophies: "13 Total Titles",
+                shortDesc: "The father of modern FC Barcelona. As a player he ended a 14-year title drought; as a manager he created the 'Dream Team' and La Masia's DNA.",
+                fullBio: "Few individuals have shaped an institution like Johan Cruyff shaped FC Barcelona. He introduced Total Football, insisted that technique and positional superiority triumph over physical size, inspired the creation of La Masia, and led Barça to its first-ever European Cup at Wembley in 1992.",
+                moment: "His gravity-defying 'Phantom Goal' flying backheel against Atlético Madrid in 1973, and telling his players before the 1992 European Cup Final at Wembley: 'Go out there and enjoy it' (Salid y disfrutad)."
+            },
+            {
+                id: 3,
+                name: "Xavi Hernández",
+                role: "legend",
+                roleLabel: "Club Legend & Coach",
+                position: "Central Midfielder",
+                jersey: "#6",
+                years: "1998 – 2015 (Player) / 2021–2024 (Coach)",
+                apps: "767 Matches",
+                goals: "85 Goals / 185 Assists",
+                trophies: "25 Trophies (+2 as Coach)",
+                shortDesc: "The ultimate puppet master of Tiki-Taka. Dictated the tempo of the greatest midfield in history alongside Iniesta and Busquets.",
+                fullBio: "Born in Terrassa and raised at La Masia from age 11, Xavi Hernández was the metronome of FC Barcelona for 17 seasons. Known for his 360-degree vision, 95% pass completion rate, and inability to lose the ball, he guided Barça to four Champions League titles and later returned as head coach to win the 2022/23 La Liga title.",
+                moment: "Delivering four assists in the historic 2-6 victory over Real Madrid at the Bernabéu in 2009 and lifting the 2015 Champions League trophy in Berlin in his final match as Barça captain."
+            },
+            {
+                id: 4,
+                name: "Andrés Iniesta",
+                role: "legend",
+                roleLabel: "Club Legend",
+                position: "Attacking Midfielder",
+                jersey: "#8",
+                years: "2002 – 2018",
+                apps: "674 Matches",
+                goals: "57 Goals / 135 Assists",
+                trophies: "32 Trophies",
+                shortDesc: "'El Ilusionista' — a magician whose effortless dribbling, la croqueta skill, and big-game heroics earned standing ovations in every stadium.",
+                fullBio: "Andrés Iniesta embodied the grace, humility, and genius of La Masia. Capable of gliding past three defenders in a phone booth with his signature 'La Croqueta' move, Iniesta was named Man of the Match in the 2015 Champions League Final, the 2012 Euro Final, and the 2010 World Cup Final.",
+                moment: "'The Iniestazo' — his 93rd-minute thunderbolt into the top corner at Stamford Bridge against Chelsea in 2009 that sent Barça to the Rome Champions League Final on their way to the Sextuple."
+            },
+            {
+                id: 5,
+                name: "Ronaldinho Gaúcho",
+                role: "legend",
+                roleLabel: "Club Legend",
+                position: "Attacking Midfielder / Left Wing",
+                jersey: "#10",
+                years: "2003 – 2008",
+                apps: "207 Matches",
+                goals: "94 Goals / 70 Assists",
+                trophies: "5 Trophies & 2005 Ballon d'Or",
+                shortDesc: "The man who brought joy and a smile back to Camp Nou, inspiring the 2006 Champions League triumph and mentoring a young Leo Messi.",
+                fullBio: "When Ronaldinho arrived in 2003, Barça hadn't won a trophy in four years. With his infectious smile, elasticos, no-look passes, and bicycle kicks, the Brazilian wizard enchanted the football world, won the 2005 Ballon d'Or, and assisted Lionel Messi's very first official Barça goal.",
+                moment: "November 19, 2005: After scoring two breathtaking solo goals in a 0-3 win at the Santiago Bernabéu, even Real Madrid fans rose to their feet to give Ronaldinho an unforgettable standing ovation."
+            },
+            {
+                id: 6,
+                name: "Carles Puyol",
+                role: "legend",
+                roleLabel: "Eternal Captain",
+                position: "Center-Back",
+                jersey: "#5",
+                years: "1999 – 2014",
+                apps: "593 Matches",
+                goals: "19 Goals",
+                trophies: "21 Trophies",
+                shortDesc: "'El Tiburón' (The Shark) — the lionhearted La Masia captain who defined loyalty, sportsmanship, and defensive grit for 15 seasons.",
+                fullBio: "A one-club man who captained FC Barcelona for a decade, Carles Puyol combined ferocious aerial ability and last-ditch tackles with noble sportsmanship. Whether playing with a protective mask over a broken cheekbone or inviting Éric Abidal to lift the 2011 Champions League trophy after overcoming illness, Puyol is the soul of Barça.",
+                moment: "Soaring like a missile to score a bullet header in the 2-6 El Clásico win in 2009 and kissing his Catalan Senyera captain's armband in front of the Bernabéu."
+            },
+            {
+                id: 7,
+                name: "Pep Guardiola",
+                role: "manager",
+                roleLabel: "Player & Architect",
+                position: "Defensive Midfielder & Head Coach",
+                jersey: "#4",
+                years: "1990–2001 (Player) / 2008–2012 (Coach)",
+                apps: "384 Apps / 247 Coached",
+                goals: "179 Wins in 247 Matches (72.5%)",
+                trophies: "16 as Player + 14 as Manager",
+                shortDesc: "The original '4' pivot of Cruyff's Dream Team who returned as manager to create the most dominant and admired football team of all time.",
+                fullBio: "A La Masia ballboy turned Dream Team playmaker, Pep Guardiola took charge of Barça in 2008 at age 37. In just four seasons as first-team coach, he won 14 out of 19 competitions, including the historic 2009 Sextuple, three consecutive La Liga titles, and two iconic Champions League crowns.",
+                moment: "Breaking down in tears of joy on the pitch in Abu Dhabi in December 2009 after Pedro's extra-time goal sealed the 6th trophy of the calendar year — a feat never seen before in football."
+            },
+            {
+                id: 8,
+                name: "Sergio Busquets",
+                role: "legend",
+                roleLabel: "Club Legend",
+                position: "Defensive Midfielder (Pivot)",
+                jersey: "#5",
+                years: "2008 – 2023",
+                apps: "722 Matches (3rd All-Time)",
+                goals: "18 Goals / 45 Assists",
+                trophies: "32 Trophies",
+                shortDesc: "'You watch the game, you don't see Busquets. You watch Busquets, you see the whole game.' The greatest defensive pivot in history.",
+                fullBio: "Promoted directly from the fourth tier by Pep Guardiola in 2008, Sergio Busquets redefined the defensive midfield position. Using body feints, one-touch disguise passes, and unmatched tactical anticipation, he anchored Barça's midfield for 15 years and made 722 appearances.",
+                moment: "His famous stationary 'pull-back assist' for Lionel Messi's solo goal against Real Madrid in the 2011 Champions League Semi-Final at the Bernabéu."
+            },
+            {
+                id: 9,
+                name: "Lamine Yamal",
+                role: "current",
+                roleLabel: "Current Superstar",
+                position: "Right Winger",
+                jersey: "#19",
+                years: "2023 – Present",
+                apps: "La Masia Gem",
+                goals: "Youngest Scorer in History",
+                trophies: "La Liga, Supercopa, Kopa Trophy",
+                shortDesc: "The teenage phenomenon from Rocafonda & La Masia who has taken world football by storm with dazzling dribbles and historic records.",
+                fullBio: "Making his FC Barcelona first-team debut at just 15 years, 9 months, and 16 days old in April 2023, Lamine Yamal has shattered virtually every age record in Spanish and European football. With his trademark outside-of-the-boot trivela passes and fearless 1v1 dribbling, he won the 2024 Kopa Trophy and Golden Boy award.",
+                moment: "Scoring a thunderous right-footed strike in the 0-4 El Clásico victory at the Santiago Bernabéu in October 2024 at age 17 to become the youngest scorer in Clásico history."
+            },
+            {
+                id: 10,
+                name: "Pedri González",
+                role: "current",
+                roleLabel: "Current Midfield Maestro",
+                position: "Central / Attacking Midfielder",
+                jersey: "#8",
+                years: "2020 – Present",
+                apps: "160+ Matches",
+                goals: "Golden Boy & Kopa Winner",
+                trophies: "La Liga, Copa del Rey, Supercopa",
+                shortDesc: "Wearing Iniesta's iconic #8 shirt, Pedri combines silky ball control, pause ('la pausa'), and elite vision in the heart of Barça's midfield.",
+                fullBio: "Signed from Las Palmas as a 17-year-old, Pedri immediately looked like he had been raised at La Masia his entire life. Playing 52 matches in his debut season and winning both the 2021 Golden Boy and Kopa Trophy, Pedri is the creative heartbeat of the modern Blaugrana side.",
+                moment: "His mesmerizing backheel assist to Lionel Messi against Real Valladolid and scoring the opener in the 2023 Spanish Super Cup Final win over Real Madrid."
+            },
+            {
+                id: 11,
+                name: "Gavi",
+                role: "current",
+                roleLabel: "La Masia Warrior",
+                position: "Central Midfielder",
+                jersey: "#6",
+                years: "2021 – Present",
+                apps: "125+ Matches",
+                goals: "2022 Golden Boy & Kopa",
+                trophies: "La Liga, Supercopa",
+                shortDesc: "The beating heart of the team. Combining Xavi's technical touch with Puyol's fearless intensity, Gavi wears the iconic #6 jersey.",
+                fullBio: "Joining La Masia from Betis at age 11, Pablo Páez Gavira ('Gavi') burst into the first team at 17 with untied shoelaces and boundless passion. In 2022, he swept both the Kopa Trophy and Golden Boy award, symbolizing the fierce loyalty of the new Blaugrana generation.",
+                moment: "Running the show in the 2023 Supercopa Final against Real Madrid (3-1), scoring one goal and assisting two more to be named Man of the Match at age 18."
+            },
+            {
+                id: 12,
+                name: "Robert Lewandowski",
+                role: "current",
+                roleLabel: "World-Class Striker",
+                position: "Center Forward",
+                jersey: "#9",
+                years: "2022 – Present",
+                apps: "115+ Matches",
+                goals: "80+ Barça Goals / Pichichi",
+                trophies: "La Liga, 2x Supercopa, Pichichi",
+                shortDesc: "One of the greatest number 9s in football history, bringing clinical finishing, leadership, and a Pichichi Trophy to Camp Nou.",
+                fullBio: "Arriving in Barcelona in 2022, Robert Lewandowski made an instant impact, winning the La Liga Pichichi Trophy (top scorer) in his debut season with 23 league goals to fire Barça to the 2022/23 championship while mentoring the club's young attackers.",
+                moment: "Scoring a clinical two-minute brace at the Santiago Bernabéu in the 0-4 El Clásico victory in October 2024."
+            }
+        ];
+
+        // 3. TROPHY CABINET DATA
+        const trophiesData = [
+            {
+                title: "UEFA Champions League",
+                count: 5,
+                category: "international",
+                years: "1992, 2006, 2009, 2011, 2015",
+                desc: "Crowned Kings of Europe five times — from Koeman's free-kick at Wembley (1992) and Belletti's winner in Paris (2006) to dominant victories in Rome (2009), Wembley (2011), and Berlin (2015).",
+                icon: "fa-trophy",
+                accent: "from-barcagold-500 to-amber-600"
+            },
+            {
+                title: "La Liga (Spanish Champions)",
+                count: 27,
+                category: "domestic",
+                years: "First in 1929 • Most Recent in 2023",
+                desc: "Winners of the very first Spanish league championship in 1929. Barça dominated the 1990s under Cruyff (4 in a row) and the 21st century (winning 11 La Liga titles between 2005 and 2023).",
+                icon: "fa-crown",
+                accent: "from-blau-500 to-grana-500"
+            },
+            {
+                title: "Copa del Rey (King's Cup)",
+                count: 31,
+                category: "domestic",
+                years: "All-Time Record Holders (1910 – 2021)",
+                desc: "No club in Spain has won the Copa del Rey more times than FC Barcelona ('El Rei de Copes'), holding the all-time record with 31 triumphs, including four consecutive titles from 2015 to 2018.",
+                icon: "fa-award",
+                accent: "from-grana-500 to-red-700"
+            },
+            {
+                title: "FIFA Club World Cup",
+                count: 3,
+                category: "international",
+                years: "2009, 2011, 2015",
+                desc: "Crowned official World Champions three times by defeating South American Copa Libertadores champions Estudiantes (2009), Neymar's Santos (4-0 in 2011), and River Plate (3-0 in 2015).",
+                icon: "fa-earth-americas",
+                accent: "from-sky-500 to-blau-600"
+            },
+            {
+                title: "UEFA Super Cup",
+                count: 5,
+                category: "international",
+                years: "1992, 1997, 2009, 2011, 2015",
+                desc: "Five European Super Cup triumphs, highlighted by the thrilling 5-4 extra-time victory over Sevilla in 2015 with goals from Messi (2), Suárez, Rafinha, and Pedro.",
+                icon: "fa-star",
+                accent: "from-indigo-500 to-blau-800"
+            },
+            {
+                title: "Supercopa de España",
+                count: 15,
+                category: "domestic",
+                years: "All-Time Record Holders (1983 – 2025)",
+                desc: "FC Barcelona holds the all-time Spanish record for the most Supercopa de España titles (15), including emphatic El Clásico final victories over Real Madrid in 2023 and 2025.",
+                icon: "fa-shield-halved",
+                accent: "from-amber-500 to-grana-600"
+            }
+        ];
+
+        // 4. ALL-TIME XI BUILDER DATA (4-3-3 POSITIONS)
+        const positionPool = {
+            GK: ["Víctor Valdés", "Marc-André ter Stegen", "Andoni Zubizarreta"],
+            LB: ["Jordi Alba", "Éric Abidal", "Alejandro Balde"],
+            LCB: ["Carles Puyol (C)", "Ronald Koeman", "Pau Cubarsí"],
+            RCB: ["Gerard Piqué", "Rafael Márquez", "Ronald Araújo"],
+            RB: ["Dani Alves", "Albert Ferrer", "Jules Koundé"],
+            CDM: ["Sergio Busquets", "Pep Guardiola", "Yaya Touré"],
+            LCM: ["Andrés Iniesta", "Pedri", "Deco"],
+            RCM: ["Xavi Hernández", "Johan Cruyff", "Gavi"],
+            LW: ["Ronaldinho", "Neymar Jr.", "Hristo Stoichkov"],
+            ST: ["Luis Suárez", "Samuel Eto'o", "Robert Lewandowski"],
+            RW: ["Lionel Messi", "Lamine Yamal", "Rivaldo"]
+        };
+
+        let currentLineupIndex = {
+            GK: 0, LB: 0, LCB: 0, RCB: 0, RB: 0,
+            CDM: 0, LCM: 0, RCM: 0,
+            LW: 0, ST: 0, RW: 0
+        };
+
+        // 5. 10 BARÇA TRIVIA QUIZ QUESTIONS (ALL IN ENGLISH)
+        const quizQuestions = [
+            {
+                category: "Club Founding",
+                question: "In what year was FC Barcelona founded by Swiss football pioneer Joan Gamper?",
+                options: ["1889", "1899", "1902", "1910"],
+                correct: 1,
+                fact: "FC Barcelona was founded on November 29, 1899, after Joan Gamper published an advertisement in Los Deportes magazine inviting players to form a football club in the city."
+            },
+            {
+                category: "All-Time Records",
+                question: "How many official goals did Lionel Messi score for FC Barcelona across 778 matches?",
+                options: ["550 goals", "612 goals", "672 goals", "710 goals"],
+                correct: 2,
+                fact: "Lionel Messi scored an astonishing 672 official goals in 778 appearances for Barça between 2004 and 2021 — a world record for the most goals scored for a single European club!"
+            },
+            {
+                category: "European Glory",
+                question: "Who scored the 111th-minute extra-time free-kick at Wembley against Sampdoria to win Barça's first-ever European Cup in 1992?",
+                options: ["Pep Guardiola", "Ronald Koeman", "Hristo Stoichkov", "Michael Laudrup"],
+                correct: 1,
+                fact: "Dutch defender Ronald Koeman blasted a thunderous free-kick past Gianluca Pagliuca in the 111th minute on May 20, 1992, giving Johan Cruyff's Dream Team their historic first European Cup."
+            },
+            {
+                category: "La Masia Excellence",
+                question: "In 2010, which three La Masia graduates made history by sweeping all three spots on the FIFA Ballon d'Or podium?",
+                options: [
+                    "Messi, Ronaldinho, and Eto'o",
+                    "Messi, Iniesta, and Xavi",
+                    "Messi, Puyol, and Busquets",
+                    "Messi, Villa, and Piqué"
+                ],
+                correct: 1,
+                fact: "In 2010, Lionel Messi (1st), Andrés Iniesta (2nd), and Xavi Hernández (3rd) became the first and only trio from the same youth academy to occupy the entire Ballon d'Or podium."
+            },
+            {
+                category: "Historic Seasons",
+                question: "How many trophies did Pep Guardiola's FC Barcelona win in the calendar year 2009 to complete the first 'Sextuple' in football history?",
+                options: ["4 Trophies", "5 Trophies", "6 Trophies", "7 Trophies"],
+                correct: 2,
+                fact: "In 2009, Barça won every single competition they entered (6 out of 6): La Liga, Copa del Rey, UEFA Champions League, Supercopa de España, UEFA Super Cup, and FIFA Club World Cup."
+            },
+            {
+                category: "The MSN Trident",
+                question: "How many combined goals did the 'MSN' trio (Messi, Suárez, and Neymar) score during the 2014/15 Treble-winning season?",
+                options: ["98 goals", "105 goals", "122 goals", "140 goals"],
+                correct: 2,
+                fact: "In 2014/15, Messi (58), Neymar (39), and Suárez (25) scored a combined 122 goals, before breaking their own record the very next season (2015/16) with 131 combined goals!"
+            },
+            {
+                category: "Stadium Heritage",
+                question: "In what year was Camp Nou officially inaugurated as FC Barcelona's home stadium?",
+                options: ["1929", "1945", "1957", "1974"],
+                correct: 2,
+                fact: "Camp Nou opened its doors on September 24, 1957 (during the La Mercè festival), replacing the old Camp de Les Corts which could no longer hold the crowds coming to watch legendary forward Ladislao Kubala."
+            },
+            {
+                category: "New Generation Records",
+                question: "At what age did La Masia prodigy Lamine Yamal make his official La Liga debut for FC Barcelona against Real Betis in April 2023?",
+                options: ["15 years and 9 months", "16 years and 4 months", "17 years and 1 month", "18 years old"],
+                correct: 0,
+                fact: "Lamine Yamal came on against Real Betis on April 29, 2023, at just 15 years, 9 months, and 16 days old — becoming the youngest player in FC Barcelona's modern history!"
+            },
+            {
+                category: "Champions League History",
+                question: "How many UEFA Champions League / European Cup titles has FC Barcelona won in its history?",
+                options: ["3 titles", "4 titles", "5 titles", "6 titles"],
+                correct: 2,
+                fact: "FC Barcelona has won 5 European Cups / Champions League trophies: 1992 (Wembley), 2006 (Paris), 2009 (Rome), 2011 (Wembley), and 2015 (Berlin)."
+            },
+            {
+                category: "Copa del Rey Dominance",
+                question: "FC Barcelona is nicknamed 'El Rei de Copes' (The King of Cups) for holding the all-time record in which competition with 31 titles?",
+                options: ["Copa del Rey", "UEFA Cup", "Trofeo Joan Gamper", "Copa Catalunya"],
+                correct: 0,
+                fact: "With 31 Copa del Rey trophies, FC Barcelona is the most successful club in the history of Spain's oldest national football competition."
+            }
+        ];
+
+        // ==================== SPA NAVIGATION ====================
+        function switchTab(tabId) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) target.classList.add('active');
+
+            // Desktop Nav Buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.getAttribute('data-tab') === tabId) {
+                    btn.className = "nav-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-gradient-to-r from-blau-500 to-grana-500 text-white shadow-md";
+                } else {
+                    btn.className = "nav-btn px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-all flex items-center gap-2 relative";
+                }
+            });
+
+            // Mobile Nav Buttons
+            document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+                if (btn.getAttribute('data-tab') === tabId) {
+                    btn.className = "mobile-nav-btn w-full text-left px-4 py-3 rounded-xl text-base font-semibold flex items-center gap-3 bg-gradient-to-r from-blau-500 to-grana-500 text-white";
+                } else {
+                    btn.className = "mobile-nav-btn w-full text-left px-4 py-3 rounded-xl text-base font-semibold text-slate-200 hover:bg-white/10 flex items-center gap-3";
+                }
+            });
+
+            // Close mobile menu if open
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileIcon = document.getElementById('mobile-menu-icon');
+            if (!mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+                mobileIcon.classList.replace('fa-xmark', 'fa-bars');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileIcon = document.getElementById('mobile-menu-icon');
+            mobileMenu.classList.toggle('hidden');
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileIcon.classList.replace('fa-xmark', 'fa-bars');
+            } else {
+                mobileIcon.classList.replace('fa-bars', 'fa-xmark');
+            }
+        }
+
+        // ==================== HOME: INTERACTIVE TIMELINE ====================
+        function selectEra(index) {
+            const buttons = document.querySelectorAll('.era-btn');
+            buttons.forEach((btn, idx) => {
+                if (idx === index) {
+                    btn.className = "era-btn px-5 py-3 rounded-xl font-display font-bold uppercase tracking-wider text-sm transition-all bg-gradient-to-r from-blau-500 to-grana-500 text-white shadow-lg";
+                } else {
+                    btn.className = "era-btn px-5 py-3 rounded-xl font-display font-bold uppercase tracking-wider text-sm transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 border border-white/10";
+                }
+            });
+
+            const era = erasData[index];
+            const container = document.getElementById('era-display');
+            const highlightsHtml = era.highlights.map(h => `
+                <li class="flex items-start gap-3 bg-slate-950/80 p-3.5 rounded-xl border border-white/5">
+                    <i class="fa-solid fa-circle-check text-barcagold-500 mt-1 flex-shrink-0"></i>
+                    <span class="text-sm text-slate-200">${h}</span>
+                </li>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-7 space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 rounded-full bg-barcagold-500 text-blau-950 text-xs font-extrabold uppercase tracking-wider">${era.badge}</span>
+                            <span class="font-display text-2xl font-bold text-barcagold-400">${era.year}</span>
+                        </div>
+                        <h3 class="font-display text-3xl sm:text-4xl font-bold text-white uppercase">${era.title}</h3>
+                        <p class="text-sky-400 text-sm font-semibold">${era.subtitle}</p>
+                        <p class="text-slate-300 leading-relaxed text-sm sm:text-base">${era.desc}</p>
+                    </div>
+                    <div class="lg:col-span-5">
+                        <h4 class="font-display text-lg font-bold uppercase text-barcagold-400 mb-3">Key Milestones of the Era:</h4>
+                        <ul class="space-y-2.5">${highlightsHtml}</ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== LEGENDS & SQUAD RENDERING & MODAL ====================
+        function renderPlayers(filter = 'all') {
+            const grid = document.getElementById('players-grid');
+            grid.innerHTML = '';
+
+            const filtered = filter === 'all'
+                ? playersData
+                : playersData.filter(p => p.role === filter);
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl border border-white/10 hover:border-barcagold-500/50 transition-all duration-300 flex flex-col cursor-pointer group";
+                card.onclick = () => openPlayerModal(p.id);
+
+                card.innerHTML = `
+                    <div class="h-36 blaugrana-stripes relative p-6 flex flex-col justify-between">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/30 to-transparent"></div>
+                        <div class="relative z-10 flex justify-between items-start">
+                            <span class="px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-barcagold-400 text-xs font-bold uppercase tracking-wider border border-white/10">
+                                ${p.roleLabel}
+                            </span>
+                            <span class="font-display text-4xl font-extrabold text-white/80 drop-shadow">${p.jersey}</span>
+                        </div>
+                        <div class="relative z-10">
+                            <span class="text-xs font-semibold text-barcagold-400">${p.position}</span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-grow flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-display text-2xl font-bold text-white uppercase group-hover:text-barcagold-400 transition-colors">${p.name}</h3>
+                                <span class="text-xs text-slate-400 font-medium">${p.years.split(' ')[0]}</span>
+                            </div>
+                            <p class="text-sm text-slate-300 mt-3 leading-relaxed">${p.shortDesc}</p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs">
+                            <div>
+                                <span class="text-slate-400 block">Impact</span>
+                                <span class="font-bold text-barcagold-400">${p.goals}</span>
+                            </div>
+                            <span class="w-9 h-9 rounded-full bg-white/5 group-hover:bg-barcagold-500 group-hover:text-blau-950 flex items-center justify-center transition-colors">
+                                <i class="fa-solid fa-plus"></i>
+                            </span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterPlayers(category) {
+            document.querySelectorAll('.player-filter-btn').forEach(btn => {
+                if (btn.getAttribute('data-filter') === category) {
+                    btn.className = "player-filter-btn px-5 py-2.5 rounded-full text-sm font-bold transition-all bg-gradient-to-r from-blau-500 to-grana-500 text-white shadow-lg";
+                } else {
+                    btn.className = "player-filter-btn px-5 py-2.5 rounded-full text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 border border-white/10 transition-all";
+                }
+            });
+            renderPlayers(category);
+        }
+
+        function openPlayerModal(id) {
+            const p = playersData.find(item => item.id === id);
+            if (!p) return;
+
+            document.getElementById('modal-role-badge').textContent = `${p.roleLabel} • ${p.position}`;
+            document.getElementById('modal-player-name').textContent = p.name;
+            document.getElementById('modal-player-years').textContent = `Blaugrana Tenure: ${p.years}`;
+            document.getElementById('modal-jersey-num').textContent = p.jersey;
+            document.getElementById('modal-stat-apps').textContent = p.apps;
+            document.getElementById('modal-stat-goals').textContent = p.goals;
+            document.getElementById('modal-stat-trophies').textContent = p.trophies;
+            document.getElementById('modal-player-bio').textContent = p.fullBio;
+            document.getElementById('modal-player-moment').textContent = p.moment;
+
+            const modal = document.getElementById('player-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closePlayerModal() {
+            const modal = document.getElementById('player-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        document.getElementById('player-modal').addEventListener('click', closePlayerModal);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closePlayerModal();
+        });
+
+        // ==================== TROPHY CABINET RENDERING ====================
+        function renderTrophies(filter = 'all') {
+            const grid = document.getElementById('trophies-grid');
+            grid.innerHTML = '';
+
+            const filtered = filter === 'all'
+                ? trophiesData
+                : trophiesData.filter(t => t.category === filter);
+
+            filtered.forEach(t => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 rounded-3xl p-7 border border-white/10 hover:border-barcagold-500/40 shadow-xl flex flex-col justify-between transition-all";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${t.accent} flex items-center justify-center text-white text-2xl shadow-lg">
+                                <i class="fa-solid ${t.icon}"></i>
+                            </div>
+                            <span class="font-display text-5xl font-extrabold text-barcagold-400">${t.count}x</span>
+                        </div>
+                        <h3 class="font-display text-2xl font-bold text-white uppercase">${t.title}</h3>
+                        <span class="text-xs font-bold text-sky-400 block mt-1">${t.years}</span>
+                        <p class="text-sm text-slate-300 mt-3 leading-relaxed">${t.desc}</p>
+                    </div>
+                    <div class="mt-6 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
+                        <span class="uppercase font-bold tracking-wider">${t.category === 'international' ? 'International Honour' : 'Spanish Domestic Honour'}</span>
+                        <i class="fa-solid fa-medal text-barcagold-500"></i>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterTrophies(category) {
+            document.querySelectorAll('.trophy-filter-btn').forEach(btn => {
+                if (btn.getAttribute('data-tfilter') === category) {
+                    btn.className = "trophy-filter-btn px-5 py-2.5 rounded-xl text-sm font-bold bg-barcagold-500 text-blau-950 shadow-md transition-all";
+                } else {
+                    btn.className = "trophy-filter-btn px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-900 text-slate-300 hover:bg-slate-800 border border-white/10 transition-all";
+                }
+            });
+            renderTrophies(category);
+        }
+
+        // ==================== ALL-TIME XI PITCH BUILDER ====================
+        function renderPitchXI() {
+            const summaryList = document.getElementById('lineup-list-summary');
+            summaryList.innerHTML = '';
+
+            Object.keys(positionPool).forEach(pos => {
+                const playerName = positionPool[pos][currentLineupIndex[pos]];
+                const posEl = document.getElementById(`pos-${pos}`);
+                if (posEl) {
+                    posEl.innerHTML = `
+                        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-full blaugrana-stripes border-2 border-barcagold-400 shadow-lg flex items-center justify-center text-white font-display font-bold text-xs group-hover:scale-110 transition-transform">
+                            ${pos}
+                        </div>
+                        <span class="mt-1 px-2.5 py-0.5 rounded-full bg-slate-950/90 text-white font-bold text-[11px] sm:text-xs shadow border border-white/15 text-center whitespace-nowrap">
+                            ${playerName}
+                        </span>
+                    `;
+                }
+
+                const li = document.createElement('li');
+                li.className = "flex items-center justify-between py-1 border-b border-white/5";
+                li.innerHTML = `
+                    <span class="font-bold text-barcagold-400 w-12">${pos}</span>
+                    <span class="text-white font-medium flex-grow">${playerName}</span>
+                    <button onclick="cyclePositionPlayer('${pos}')" class="text-xs text-sky-400 hover:underline">Swap</button>
+                `;
+                summaryList.appendChild(li);
+            });
+        }
+
+        function cyclePositionPlayer(pos) {
+            currentLineupIndex[pos] = (currentLineupIndex[pos] + 1) % positionPool[pos].length;
+            renderPitchXI();
+        }
+
+        function applyPresetXI(preset) {
+            if (preset === 'alltime') {
+                Object.keys(currentLineupIndex).forEach(k => currentLineupIndex[k] = 0);
+            } else if (preset === '2011') {
+                currentLineupIndex = { GK: 0, LB: 1, LCB: 0, RCB: 0, RB: 0, CDM: 0, LCM: 0, RCM: 0, LW: 1, ST: 1, RW: 0 };
+            } else if (preset === 'modern') {
+                currentLineupIndex = { GK: 1, LB: 2, LCB: 2, RCB: 2, RB: 2, CDM: 0, LCM: 1, RCM: 2, LW: 1, ST: 2, RW: 1 };
+            }
+            renderPitchXI();
+        }
+
+        // ==================== BARÇA TRIVIA QUIZ ENGINE ====================
+        let currentQuestionIndex = 0;
+        let quizScore = 0;
+        let isAnswered = false;
+
+        function renderQuizQuestion() {
+            isAnswered = false;
+            const q = quizQuestions[currentQuestionIndex];
+            const total = quizQuestions.length;
+
+            document.getElementById('quiz-counter').textContent = `Question ${currentQuestionIndex + 1} of ${total}`;
+            document.getElementById('quiz-score-live').textContent = `Score: ${quizScore}`;
+            document.getElementById('quiz-progress-bar').style.width = `${((currentQuestionIndex + 1) / total) * 100}%`;
+
+            document.getElementById('quiz-category-badge').textContent = q.category;
+            document.getElementById('quiz-question').textContent = q.question;
+
+            const expEl = document.getElementById('quiz-explanation');
+            expEl.classList.add('hidden');
+            const nextBtn = document.getElementById('quiz-next-btn');
+            nextBtn.classList.add('hidden');
+            nextBtn.classList.remove('inline-flex');
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-2xl border-2 border-white/10 bg-slate-950/60 hover:border-barcagold-500 hover:bg-slate-800/70 transition-all font-medium text-slate-200 flex items-center justify-between gap-3";
+                btn.onclick = () => selectQuizAnswer(idx);
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-white/10 text-barcagold-400 font-bold text-xs flex items-center justify-center flex-shrink-0">
+                            ${String.fromCharCode(65 + idx)}
+                        </span>
+                        <span>${optText}</span>
+                    </div>
+                    <span class="option-status-icon"></span>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectQuizAnswer(selectedIndex) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const q = quizQuestions[currentQuestionIndex];
+            const buttons = document.getElementById('quiz-options').querySelectorAll('button');
+            const expEl = document.getElementById('quiz-explanation');
+            const nextBtn = document.getElementById('quiz-next-btn');
+
+            const isCorrect = selectedIndex === q.correct;
+            if (isCorrect) {
+                quizScore++;
+                document.getElementById('quiz-score-live').textContent = `Score: ${quizScore}`;
+            }
+
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                btn.classList.remove('hover:border-barcagold-500', 'hover:bg-slate-800/70');
+                const iconSpan = btn.querySelector('.option-status-icon');
+
+                if (idx === q.correct) {
+                    btn.classList.replace('border-white/10', 'border-emerald-500');
+                    btn.classList.add('bg-emerald-950/60', 'text-emerald-200');
+                    iconSpan.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400 text-xl"></i>';
+                } else if (idx === selectedIndex && !isCorrect) {
+                    btn.classList.replace('border-white/10', 'border-red-500');
+                    btn.classList.add('bg-red-950/60', 'text-red-200');
+                    iconSpan.innerHTML = '<i class="fa-solid fa-circle-xmark text-red-400 text-xl"></i>';
+                } else {
+                    btn.classList.add('opacity-50');
+                }
+            });
+
+            expEl.classList.remove('hidden');
+            if (isCorrect) {
+                expEl.className = "p-5 rounded-2xl border border-emerald-500/40 bg-emerald-950/40 text-emerald-100 text-sm leading-relaxed";
+                expEl.innerHTML = `<strong class="font-bold text-emerald-400 block mb-1"><i class="fa-solid fa-check mr-1"></i> Golazo! That's Correct:</strong> ${q.fact}`;
+            } else {
+                expEl.className = "p-5 rounded-2xl border border-barcagold-500/40 bg-amber-950/30 text-slate-200 text-sm leading-relaxed";
+                expEl.innerHTML = `<strong class="font-bold text-barcagold-400 block mb-1"><i class="fa-solid fa-circle-info mr-1"></i> Post Hit! Did You Know:</strong> ${q.fact}`;
+            }
+
+            nextBtn.classList.remove('hidden');
+            nextBtn.classList.add('inline-flex');
+            const nextBtnSpan = nextBtn.querySelector('span');
+            nextBtnSpan.textContent = currentQuestionIndex === quizQuestions.length - 1 ? "See Final Rank" : "Next Question";
+        }
+
+        function nextQuizQuestion() {
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                currentQuestionIndex++;
+                renderQuizQuestion();
+            } else {
+                showQuizResult();
+            }
+        }
+
+        function showQuizResult() {
+            document.getElementById('quiz-header').classList.add('hidden');
+            document.getElementById('quiz-body').classList.add('hidden');
+            const resultEl = document.getElementById('quiz-result');
+            resultEl.classList.remove('hidden');
+
+            const total = quizQuestions.length;
+            document.getElementById('result-score-text').textContent = `${quizScore} / ${total}`;
+
+            const titleEl = document.getElementById('result-title');
+            const descEl = document.getElementById('result-description');
+            const iconEl = document.getElementById('result-icon');
+
+            if (quizScore <= 4) {
+                iconEl.textContent = "⚽";
+                titleEl.textContent = "La Masia Rookie";
+                descEl.textContent = "You've just signed your youth academy contract! Explore the Legends, Trophy Cabinet, and History Timeline sections to master FC Barcelona's rich heritage.";
+            } else if (quizScore <= 7) {
+                iconEl.textContent = "🏟️";
+                titleEl.textContent = "Camp Nou Regular";
+                descEl.textContent = "Great performance! You know your Blaugrana history, remember the iconic nights at Camp Nou, and understand what 'Més que un club' truly stands for.";
+            } else {
+                iconEl.textContent = "👑";
+                titleEl.textContent = "Culé Legend";
+                descEl.textContent = "World-class! Johan Cruyff and Pep Guardiola would be proud of your tactical and historical mastery of FC Barcelona. Visca el Barça!";
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            quizScore = 0;
+            document.getElementById('quiz-header').classList.remove('hidden');
+            document.getElementById('quiz-body').classList.remove('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+            renderQuizQuestion();
+        }
+
+        // ==================== INITIALIZE ON LOAD ====================
+        window.onload = function () {
+            selectEra(0);
+            renderPlayers('all');
+            renderTrophies('all');
+            renderPitchXI();
+            renderQuizQuestion();
+        };
+    </script>
+</body>
+</html>
